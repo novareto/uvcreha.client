@@ -1,0 +1,11 @@
+<article class="user">
+  <h1 tal:content="user.loginname" />
+  <table class="table">
+    <tbody>
+      <tr tal:repeat="field fields">
+        <th tal:content="field.title" />
+        <td tal:content="field.value" />
+      </tr>
+    </tbody>
+  </table>
+</article>
