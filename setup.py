@@ -34,7 +34,10 @@ setup(
     setup_requires=setup_requirements,
     entry_points={
         'fanstatic.libraries': [
-            ' reha.client  = reha.client.app:library',
+            'reha.client = reha.client.app:library',
+        ],
+        'uvcreha.plugins': [
+            'reha.backend = reha.client'
         ],
     },
     test_suite='tests',

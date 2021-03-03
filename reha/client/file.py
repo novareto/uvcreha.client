@@ -1,24 +1,10 @@
-import horseman.response
-from horseman.http import Multidict
-from reiter.form import trigger
 from uvcreha import models
-from uvcreha.browser.crud import AddForm, DefaultView, EditForm
-from .app import clientapp
+from uvcreha.app import backend
+from uvcreha.browser.crud import AddForm
 
 
-@clientapp.route("/users/{uid}/files/add")
+@backend.route("/users/{uid}/add_file")
 class AddFile(AddForm):
     title = "Benutzer anlegen"
     model = models.File
     readonly = ('uid',)
-
-
-@clientapp.route("/users/{uid}/files/{az}")
-class FileIndex(DefaultView):
-    model = models.File
-
-
-@clientapp.route("/users/{uid}/files/{az}/edit")
-class FileEdit(EditForm):
-    model = models.File
-    readonly = ('uid', 'az')

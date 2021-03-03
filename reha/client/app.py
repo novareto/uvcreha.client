@@ -1,13 +1,9 @@
 import pathlib
-import horseman
 from fanstatic import Library
 from reiter.view.meta import View
 from reiter.application.browser import TemplateLoader
 from uvcreha import models
-from uvcreha.app import Browser
-
-
-clientapp = Browser('UVCReha')
+from uvcreha.app import backend
 
 
 TEMPLATES = TemplateLoader(
@@ -17,7 +13,7 @@ TEMPLATES = TemplateLoader(
 library = Library("reha.client", "static")
 
 
-@clientapp.route("/")
+@backend.route("/")
 class Index(View):
     template = TEMPLATES["index.pt"]
 
