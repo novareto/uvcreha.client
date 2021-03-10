@@ -2,10 +2,6 @@
 
 """The setup script."""
 
-import codecs
-import os
-import re
-
 from setuptools import setup, find_packages
 
 
@@ -36,9 +32,13 @@ setup(
         'fanstatic.libraries': [
             'reha.client = reha.client.app:library',
         ],
-        'uvcreha.plugins': [
+        'reiter.application.modules': [
             'reha.backend = reha.client'
         ],
+        'reiter.application.wsgiapps': [
+            '/backend = reha.client.app:backend'
+        ]
+
     },
     test_suite='tests',
     zip_safe=False,

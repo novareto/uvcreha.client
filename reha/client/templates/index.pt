@@ -1,18 +1,20 @@
-<h1> Hello ADMIN </h1>
-
-
-<table class="table">
-  <thead>
-    <tr>
-      <th> Benutzer </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr tal:repeat="user users">
-      <td> <span tal:content="user.loginname"> </td>
-    </tr>
-  </tbody>
-
-  <a href="add_user"> Neuen Benuzter anlegen </a>
-
-</table>
+<article>
+  <h1>Hello <span tal:content="request.user.loginname" /></h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>UID</th>
+        <th>Benutzer</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr tal:repeat="user users">
+        <td tal:content="user.uid" />
+        <td tal:content="user.loginname" />
+        <td tal:content="user.state" />
+      </tr>
+    </tbody>
+    <a href="users/add">Neuen Benuzter anlegen</a>
+  </table>
+</article>
