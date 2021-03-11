@@ -1,5 +1,5 @@
 import pathlib
-from fanstatic import Library
+from fanstatic import Library, Resource
 from reiter.arango.connector import Connector
 from reiter.view.meta import View
 from reiter.application.browser import TemplateLoader
@@ -7,10 +7,12 @@ from uvcreha import models
 from uvcreha.app import Browser, fanstatic_middleware, session_middleware
 from uvcreha.browser.login import LoginForm
 from reha.client.auth import Auth
+from chameleon import PageTemplate
 
 
 TEMPLATES = TemplateLoader("./templates")
 library = Library("reha.client", "static")
+htmx = Resource(library, 'htmx.js', bottom=True)
 
 
 class Backend(Browser):
@@ -46,9 +48,22 @@ backend = Backend('Backend Application')
 class Index(View):
     template = TEMPLATES["index.pt"]
 
+    def update(self):
+        htmx.need()
+
+    def get_users(self):
+        return self.request.database(models.User).find()
+
     def GET(self):
-        users = self.request.database(models.User).find()
+        users = self.get_users()
         return {'users': users}
 
+    def POST(self):
+        data = self.request.extract()
+        query = data.form.get('search')
+        users = [x for x in self.get_users() if x.loginname.startswith(query)]
+        ret = '<tr tal:repeat="user users"> <td tal:content="user.uid"/> <td tal:content="user.loginname"/> </tr>'
+        template = PageTemplate(ret)
+        return template(users=users)
 
 backend.route("/login")(LoginForm)
