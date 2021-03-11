@@ -1,5 +1,10 @@
 <main>
   <h1>Hello <span tal:content="request.user.loginname" /></h1>
+  <div class="row">
+  <input type="text" class="form-control" name="search" placeholder="Namen..." hx-post="" hx-trigger="keyup changed delay:500ms" hx-target="#search-results" hx-indicator=".htmx-indicator">
+
+  </div>
+  <br> <br>
   <table class="table">
     <thead>
       <tr>
@@ -8,7 +13,7 @@
         <th>Status</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="search-results">
       <tr tal:repeat="user users">
         <td tal:content="user.uid" />
         <td tal:content="user.loginname" />
