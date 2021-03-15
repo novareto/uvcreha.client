@@ -1,5 +1,5 @@
 <main>
-  <h1>Hello ${request.user.loginname}</h1>
+  <h1>reha.client</h1>
   <div class="row">
   <input type="text" class="form-control" name="search" placeholder="Namen..." hx-post="" hx-trigger="keyup changed delay:500ms" hx-target="#search-results" hx-indicator=".htmx-indicator">
 

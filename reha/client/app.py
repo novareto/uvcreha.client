@@ -9,16 +9,20 @@ from uvcreha.app import Browser, fanstatic_middleware, session_middleware
 from uvcreha.browser.login import LoginForm
 from reha.client.auth import Auth
 from chameleon import PageTemplate
-from ukh.reha.app import UKHRequest
+from uvcreha.request import Request
 
 
 TEMPLATES = TemplateLoader("./templates")
 library = Library("reha.client", "static")
 htmx = Resource(library, 'htmx.js', bottom=True)
+css = Resource(library, 'admin.css')
 
 
-class AdminRequest(UKHRequest):
-    pass
+class AdminRequest(Request):
+
+    def __init__(self, app, environ, route):
+        super(AdminRequest, self).__init__(app, environ, route)
+        css.need()
 
 
 class Backend(Browser):
@@ -109,11 +113,10 @@ class Index(View):
 backend.route("/login")(LoginForm)
 
 
-@backend.ui.register_slot(request=AdminRequest, name="sitecap")
-def sitecap(request, name, view):
-    return 'Some header'
+def sitecap(request, name):
+    return ''
 
 
 @backend.ui.register_slot(request=AdminRequest, name="footer")
-def footer(request, name, view):
-    return 'Some footer'
+def footer(request, name):
+    return TEMPLATES["footer.pt"].render(request=request)
