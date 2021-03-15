@@ -110,10 +110,10 @@ backend.route("/login")(LoginForm)
 
 
 @backend.ui.register_slot(request=AdminRequest, name="sitecap")
-def sitecap(request, name):
+def sitecap(request, name, view):
     return 'Some header'
 
 
 @backend.ui.register_slot(request=AdminRequest, name="footer")
-def footer(request, name):
+def footer(request, name, view):
     return 'Some footer'

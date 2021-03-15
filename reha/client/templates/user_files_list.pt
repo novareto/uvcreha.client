@@ -1,0 +1,18 @@
+<table class="table" metal:define-macro="search">
+  <thead>
+    <tr>
+      <th>AZ</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody id="search-results">
+    <tr tal:repeat="file files">
+      <td>
+        <a href=""
+           tal:attributes="href file.view"
+           tal:content="file.az" />
+      </td>
+      <td tal:content="file.state" />
+    </tr>
+  </tbody>
+</table>

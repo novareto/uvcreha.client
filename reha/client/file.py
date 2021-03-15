@@ -1,5 +1,5 @@
 from uvcreha import models
-from uvcreha.browser.crud import AddForm
+from uvcreha.browser.crud import AddForm, DefaultView
 from reha.client.app import backend
 
 
@@ -12,4 +12,15 @@ class AddFile(AddForm):
     def get_fields(self):
         return self.fields(
             only=("az", "uid", "mnr", "vid")
+        )
+
+
+@backend.route("/users/{uid}/file/{az}", name="file.view")
+class FileIndex(DefaultView):
+    title = "File"
+    model = models.File
+
+    def get_fields(self):
+        return self.fields(
+            only=("uid", "az", "mnr", "vid")
         )
