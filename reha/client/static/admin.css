@@ -1,0 +1,9 @@
+.footer {
+    background-color: #004994;
+    color: #FFFFFF;
+    padding-top: 15px;
+}
+
+.footer .text-muted {
+    color: #FFFFFF !important;
+}
