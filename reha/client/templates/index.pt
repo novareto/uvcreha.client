@@ -1,25 +1,36 @@
 <main>
-  <h1>Hello <span tal:content="request.user.loginname" /></h1>
+  <h1>Hello ${request.user.loginname}</h1>
   <div class="row">
   <input type="text" class="form-control" name="search" placeholder="Namen..." hx-post="" hx-trigger="keyup changed delay:500ms" hx-target="#search-results" hx-indicator=".htmx-indicator">
 
   </div>
-  <br> <br>
-  <table class="table">
+  <table class="table" metal:define-macro="search">
     <thead>
       <tr>
         <th>UID</th>
         <th>Benutzer</th>
         <th>Status</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody id="search-results">
       <tr tal:repeat="user users">
         <td tal:content="user.uid" />
-        <td tal:content="user.loginname" />
+        <td>
+          <a href=""
+             tal:attributes="href user.view"
+             tal:content="user.loginname" />
+        </td>
         <td tal:content="user.state" />
+        <td>
+          <a href=""
+             tal:attributes="href user.edit">edit</a>
+          &bull;
+          <a href=""
+             tal:attributes="href user.new_file">add new file</a>
+        </td>
       </tr>
     </tbody>
   </table>
-  <a href="users/add">Neuen Benuzter anlegen</a>
+  <a href="user.add">Neuen Benuzter anlegen</a>
 </main>
