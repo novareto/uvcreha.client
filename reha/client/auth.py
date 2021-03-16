@@ -32,6 +32,7 @@ class Auth:
         session = environ[self.config.session]
         session[self.config.user] = user.loginname
         environ[self.config.user] = user
+        session.save()
 
     def __call__(self, app):
 
