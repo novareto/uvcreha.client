@@ -1,5 +1,5 @@
 import pathlib
-from typing import NamedTuple, Callable
+from typing import NamedTuple, Callable, Dict
 from fanstatic import Library, Resource
 from reiter.arango.connector import Connector
 from reiter.view.meta import View
@@ -54,69 +54,43 @@ class Backend(Browser):
 backend = Backend('Backend Application')
 
 
-class UserRepresentation(NamedTuple):
-    user: models.User
-    path: Callable
-
-    @property
-    def uid(self):
-        return self.user.uid
-
-    @property
-    def state(self):
-        return self.user.state # fixme : use workflow to get name
-
-    @property
-    def loginname(self):
-        return self.user.loginname
-
-    @property
-    def view(self):
-        return self.path('user.view', uid=self.user.uid)
-
-    @property
-    def edit(self):
-        return self.path('user.view', uid=self.user.uid)
-
-    @property
-    def new_file(self):
-        return self.path('user.new_file', uid=self.user.uid)
-
-
 @backend.route("/")
 class Index(View):
-    template = TEMPLATES["index.pt"]
-    search = TEMPLATES["users.pt"]
+    template = TEMPLATES['index']
+    listing = TEMPLATES['listing']
 
     def update(self):
         htmx.need()
         self.base = self.request.environ['SCRIPT_NAME']
 
-    def get_users(self):
+    def get_users(self, query: str=''):
         return [
-            UserRepresentation(user, self.request.route_path)
+            models.UserBrain.create(user, self.request)
             for user in self.request.database(models.User).find()
+            if (not query or (query and user.loginname.startswith(query)))
         ]
 
     def GET(self):
         users = self.get_users()
-        return {'users': users}
+        return {'brains': users, "listing_title": "Users"}
 
     def POST(self):
         data = self.request.extract()
         query = data.form.get('search')
-        users = [x for x in self.get_users()
-                 if x.loginname.startswith(query)]
-        return self.search(macros=self.template.macros, users=users)
+        users = self.get_users(query)
+        return self.listing.render(
+            brains=users,
+            listing_title=query and f"Users (search for {query})" or "Users"
+        )
 
 
 backend.route("/login")(LoginForm)
 
 
-def sitecap(request, name):
+def sitecap(request, name, view):
     return ''
 
 
 @backend.ui.register_slot(request=AdminRequest, name="footer")
-def footer(request, name):
+def footer(request, name, view):
     return TEMPLATES["footer.pt"].render(request=request)

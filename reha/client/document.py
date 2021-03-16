@@ -3,7 +3,7 @@ from uvcreha.browser.crud import AddForm
 from reha.client.app import backend
 
 
-@backend.route("/users/{uid}/files/{az}/add_document")
+@backend.route("/users/{uid}/files/{az}/add_document", name="file.new_doc")
 class AddDocument(AddForm):
     title = "Benutzer anlegen"
     model = models.Document
