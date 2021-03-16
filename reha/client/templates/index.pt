@@ -1,6 +1,6 @@
 <main>
   <h1>reha.client</h1>
-
+  <!--
   <div class="row">
     <input type="text" class="form-control" name="search" placeholder="Namen..." hx-post="" hx-trigger="keyup changed delay:500ms" hx-target="#search-results" hx-indicator=".htmx-indicator">
   </div>
@@ -14,34 +14,50 @@
       </li>
     </ul>
   </div>
+  -->
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-9">
+        <h6> BENUTZER </h6>
+        <hr>
+  <div class="ro">
+    <input type="text" class="form-control" name="search" placeholder="Namen..." hx-post="" hx-trigger="keyup changed delay:500ms" hx-target="#search-results" hx-indicator=".htmx-indicator">
+  </div>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th>UID</th>
-        <th>Benutzer</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody id="search-results" metal:define-macro="searchi">
-      <tr tal:repeat="user users" metal:define-macro="search">
-        <td tal:content="user.uid" />
-        <td>
-          <a href=""
-             tal:attributes="href user.view"
-             tal:content="user.loginname" />
-        </td>
-        <td tal:content="user.state" />
-        <td>
-          <a href=""
-             tal:attributes="href user.edit">edit</a>
-          &bull;
-          <a href=""
-             tal:attributes="href user.new_file">add new file</a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <a href="user.add">Neuen Benuzter anlegen</a>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>UID</th>
+              <th>Benutzer</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="search-results" metal:define-macro="searchi">
+            <tr tal:repeat="user users" metal:define-macro="search">
+              <td tal:content="user.uid" />
+                <td>
+                  <a href=""
+                     tal:attributes="href user.view"
+                     tal:content="user.loginname" />
+                </td>
+                <td tal:content="user.state" />
+                  <td>
+                    <a href=""
+                       tal:attributes="href user.edit">edit</a>
+                    &bull;
+                    <a href=""
+                       tal:attributes="href user.new_file">add new file</a>
+                  </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-sm-3 border-left">
+        <h6> MENU </h6>
+        <hr>
+        <a href="user.add"> + Neuen Benuzter anlegen</a>
+      </div>
+    </div>
+  </div>
 </main>
