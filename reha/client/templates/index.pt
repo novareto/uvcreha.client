@@ -4,5 +4,9 @@
     <input type="text" class="form-control" name="search" placeholder="Namen..." hx-post="" hx-trigger="keyup changed delay:500ms" hx-target="#searchable" hx-indicator=".htmx-indicator" />
   </p>
   <div metal:use-macro="view.listing.macros.listing" />
-  <a href="user.add">Neuen Benuzter anlegen</a>
+  <div class="col-sm-3 border-left">
+    <h6> MENU </h6>
+    <hr />
+    <a href="user.add"> + Neuen Benuzter anlegen</a>
+  </div>
 </main>

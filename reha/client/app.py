@@ -87,6 +87,7 @@ class Index(View):
 backend.route("/login")(LoginForm)
 
 
+@backend.ui.register_slot(request=AdminRequest, name="sitecap")
 def sitecap(request, name, view):
     return ''
 
