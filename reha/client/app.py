@@ -8,6 +8,7 @@ from uvcreha import models
 from uvcreha.app import Browser, fanstatic_middleware, session_middleware
 from uvcreha.browser.login import LoginForm
 from reha.client.auth import Auth
+from uvcreha.emailer import SecureMailer
 from chameleon import PageTemplate
 from uvcreha.request import Request
 
@@ -40,6 +41,10 @@ class Backend(Browser):
         db = self.connector.get_database()
         auth = Auth(self.config.env)
         self.utilities.register(auth, name="authentication")
+
+        if config.emailer:
+            emailer = SecureMailer(config.emailer)
+            self.utilities.register(emailer, name="emailer")
 
         # middlewares
         self.register_middleware(

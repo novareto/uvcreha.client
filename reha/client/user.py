@@ -38,7 +38,6 @@ class AddUserForm(AddForm):
     def hook(self, obj):
         user = self.request.database(models.User)
         user.update(obj.uid, state=user_workflow.states.pending)
-        import pdb; pdb.set_trace()
         self.request.app.notify(
             "user_created",
             request=self.request, uid=obj.uid, user=obj)
