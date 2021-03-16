@@ -113,10 +113,11 @@ class Index(View):
 backend.route("/login")(LoginForm)
 
 
-def sitecap(request, name):
+@backend.ui.register_slot(request=AdminRequest, name="sitecap")
+def sitecap(request, name, view):
     return ''
 
 
 @backend.ui.register_slot(request=AdminRequest, name="footer")
-def footer(request, name):
+def footer(request, name, view):
     return TEMPLATES["footer.pt"].render(request=request)

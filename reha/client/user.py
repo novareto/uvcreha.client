@@ -1,5 +1,6 @@
 from typing import NamedTuple, Callable
 from uvcreha import models
+from uvcreha.workflow import user_workflow
 from uvcreha.browser.crud import AddForm, DefaultView, EditForm
 from reha.client.app import backend, AdminRequest, TEMPLATES
 
@@ -18,7 +19,7 @@ class FileRepresentation(NamedTuple):
 
     @property
     def state(self):
-        return self.file.state # fixme : use workflow to get name
+        return self.file.state  # fixme : use workflow to get name
 
     @property
     def view(self):
@@ -35,6 +36,9 @@ class AddUserForm(AddForm):
     model = models.User
 
     def hook(self, obj):
+        user = self.request.database(models.User)
+        user.update(obj.uid, state=user_workflow.states.pending)
+        import pdb; pdb.set_trace()
         self.request.app.notify(
             "user_created",
             request=self.request, uid=obj.uid, user=obj)
