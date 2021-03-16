@@ -1,63 +1,12 @@
 <main>
   <h1>reha.client</h1>
-  <!--
-  <div class="row">
-    <input type="text" class="form-control" name="search" placeholder="Namen..." hx-post="" hx-trigger="keyup changed delay:500ms" hx-target="#search-results" hx-indicator=".htmx-indicator">
-  </div>
-  <div class="p-3">
-    <ul class="nav nav-tabs justify-content-end">
-      <li class="nav-item">
-        <a class="nav-link active" href="user.add">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
-            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-          </svg>Benutzer</a>
-      </li>
-    </ul>
-  </div>
-  -->
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-9">
-        <h6> BENUTZER </h6>
-        <hr>
-  <div class="ro">
-    <input type="text" class="form-control" name="search" placeholder="Namen..." hx-post="" hx-trigger="keyup changed delay:500ms" hx-target="#search-results" hx-indicator=".htmx-indicator">
-  </div>
-
-        <table class="table">
-          <thead>
-            <tr>
-              <th>UID</th>
-              <th>Benutzer</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="search-results" metal:define-macro="searchi">
-            <tr tal:repeat="user users" metal:define-macro="search">
-              <td tal:content="user.uid" />
-                <td>
-                  <a href=""
-                     tal:attributes="href user.view"
-                     tal:content="user.loginname" />
-                </td>
-                <td tal:content="user.state" />
-                  <td>
-                    <a href=""
-                       tal:attributes="href user.edit">edit</a>
-                    &bull;
-                    <a href=""
-                       tal:attributes="href user.new_file">add new file</a>
-                  </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="col-sm-3 border-left">
-        <h6> MENU </h6>
-        <hr>
-        <a href="user.add"> + Neuen Benuzter anlegen</a>
-      </div>
-    </div>
+  <p class="row">
+    <input type="text" class="form-control" name="search" placeholder="Namen..." hx-post="" hx-trigger="keyup changed delay:500ms" hx-target="#searchable" hx-indicator=".htmx-indicator" />
+  </p>
+  <div metal:use-macro="view.listing.macros.listing" />
+  <div class="col-sm-3 border-left">
+    <h6> MENU </h6>
+    <hr />
+    <a href="user.add"> + Neuen Benuzter anlegen</a>
   </div>
 </main>

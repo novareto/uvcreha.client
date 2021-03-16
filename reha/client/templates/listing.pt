@@ -1,0 +1,31 @@
+<div id="searchable" metal:define-macro="listing" tal:condition="brains">
+  <h2 tal:content="listing_title" />
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="search-results">
+      <tr tal:repeat="brain brains">
+        <td tal:content="brain.id" />
+        <td>
+          <a href=""
+             tal:attributes="href brain.link"
+             tal:content="brain.title" />
+        </td>
+        <td tal:content="brain.state" />
+        <td>
+          <ul>
+            <li tal:repeat="(title, link) brain.actions.items()">
+              <a tal:content="title" tal:attributes="href link" />
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
