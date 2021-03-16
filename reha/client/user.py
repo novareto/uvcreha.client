@@ -8,6 +8,11 @@ class AddUserForm(AddForm):
     title = "Benutzer anlegen"
     model = models.User
 
+    def hook(self, obj):
+        self.request.app.notify(
+            "user_created",
+            request=self.request, uid=obj.uid, user=obj)
+
     def get_fields(self):
         return self.fields(
             only=("uid", "loginname", "password", "email")
