@@ -13,8 +13,8 @@ class AddFile(AddForm):
     readonly = ('uid',)
 
     def hook(self, obj):
-        user = self.request.database(models.User)
-        user.update(obj.uid, state=file_workflow.states.created)
+        user = self.request.database(models.File)
+        user.update(obj.az, state=file_workflow.states.created.name)
         self.request.app.notify(
             "file_created",
             request=self.request, az=obj.az, obj=obj)

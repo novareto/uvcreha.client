@@ -1,0 +1,32 @@
+<h1>Versicherter </h1>
+<div>
+  <span tal:content="files"></span>
+</div>
+
+
+<div class="accordion" id="accordionExample">
+  <div class="card" tal:repeat="file files">
+    <div class="card-header" id="headingOne" tal:attributes="id string:heading-${file.id}">
+      <div class="row">
+        <h2 class="mb-0 col-md-8" >
+          <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne" tal:attributes="id string:#collapse-${file.id}; data-target string:#collapse-${file.id}">
+            <span tal:content="file.id"> </span>
+            <span tal:content="file.state"> </span>
+          </button>
+        </h2>
+        <h2 class="col-md-4">
+          <a href="" class="btn btn-link btn-block text-right" tal:attributes="href file.actions['New document']"> + Neues Dokument </a>
+        </h2>
+      </div>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample"  tal:attributes="id string:collapse-${file.id}">
+      <div class="card-body">
+        <span tal:content="view.get_docs(file.id)"> </span>
+          
+        Some placeholder content for the first accordion panel. This panel is shown by default, thanks to the <code>.show</code> class.
+      </div>
+    </div>
+  </div>
+</div>
+
