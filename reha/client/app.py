@@ -50,8 +50,9 @@ class Backend(Browser):
         self.register_middleware(
             fanstatic_middleware(self.config.assets), order=0)
 
-        self.register_middleware(
-            session_middleware(self.config), order=1)
+        middleware = session_middleware(self.config)
+        middleware.manager.cookie_name += ".admin"
+        self.register_middleware(middleware, order=1)
 
         self.register_middleware(auth, order=2)
 

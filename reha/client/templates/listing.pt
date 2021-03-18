@@ -17,7 +17,11 @@
              tal:attributes="href brain.link"
              tal:content="brain.title" />
         </td>
-        <td tal:content="brain.state" />
+        <td>
+          <span data-state="${brain.state.name}">
+            ${brain.state.value}
+          </span>
+        </td>
         <td>
           <ul>
             <li tal:repeat="(title, link) brain.actions.items()">

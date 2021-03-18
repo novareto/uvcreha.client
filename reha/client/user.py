@@ -1,3 +1,4 @@
+from collections import defaultdict, Counter
 from uvcreha import models
 from reiter.view.meta import View
 from uvcreha.workflow import user_workflow
@@ -36,21 +37,32 @@ class UserFormIndex(DefaultView):
 
 @backend.route("/users/{uid}/lp", name="user.viewlp")
 class UserFormIndexLP(View):
-    template = TEMPLATES['user_lp.pt']
+    template = TEMPLATES['user_lp']
+    listing = TEMPLATES['listing']
 
-    def get_docs(self, az):
-        uid = self.request.route.params['uid']
-        return [
-            models.DocBrain.create(doc, self.request) for doc in self.request.database(
-                models.Document).find(uid=uid, az=az)
-        ]
+    def update(self):
+        self.uid = self.params['uid']
+        self.context = models.UserBrain.create(
+            self.request.database(models.User).fetch(self.uid), self.request)
 
     def GET(self):
-        files = [models.FileBrain.create(file, self.request)
-                for file in self.request.database(models.File).find(uid=self.request.route.params['uid'])]
-        user = self.request.database(models.User)
-
-        return dict(request=self.request, files=files)
+        files = [
+            models.FileBrain.create(file, self.request)
+            for file in
+            self.request.database(models.File).find(uid=self.uid)
+        ]
+        docs = defaultdict(list)
+        counters = defaultdict(Counter)
+        for doc in self.request.database(models.Document).find(uid=self.uid):
+            brain = models.DocBrain.create(doc, self.request)
+            docs[doc.az].append(brain)
+            counters[doc.az].update([brain.state.value])
+        return {
+            'request': self.request,
+            'files': files,
+            'docs': docs,
+            'counters': counters
+        }
 
 
 @backend.route("/users/{uid}/edit", name="user.edit")
