@@ -50,4 +50,23 @@ class DocumentIndex(DefaultView):
 class DocumentEdit(EditForm):
     title = "Document"
     model = models.Document
-    readonly = ('uid', 'az', 'docid', 'content_type')
+    readonly = ('uid', 'az', 'docid')
+
+    def get_fields(self):
+        return self.fields(
+            exclude=(
+                'key', 'id', 'rev',  # arango fields
+                'creation_date', # auto-added value
+                'state', # workflow state
+                'item', # content_type based
+            )
+        )
+
+    def setupForm(self, data=None, formdata=Multidict()):
+        fields = self.get_fields()
+        form = Form.from_fields(
+            fields, enforce={'content_type': alternatives})
+        form.process(data=self.params, formdata=formdata)
+        if self.readonly is not None:
+            form.readonly(self.readonly)
+        return form
