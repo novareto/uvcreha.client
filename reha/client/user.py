@@ -25,18 +25,7 @@ class AddUserForm(AddForm):
 
 
 @backend.route("/users/{uid}", name="user.view")
-class UserFormIndex(DefaultView):
-    title = "User"
-    model = models.User
-
-    def get_fields(self):
-        return self.fields(
-            only=("uid", "loginname", "email")
-        )
-
-
-@backend.route("/users/{uid}/lp", name="user.viewlp")
-class UserFormIndexLP(View):
+class UserIndex(View):
     template = TEMPLATES['user_lp']
     listing = TEMPLATES['listing']
 
@@ -58,7 +47,6 @@ class UserFormIndexLP(View):
             docs[doc.az].append(brain)
             counters[doc.az].update([brain.state.value])
         return {
-            'request': self.request,
             'files': files,
             'docs': docs,
             'counters': counters
@@ -75,13 +63,3 @@ class EditUserForm(EditForm):
         return self.fields(
             only=("uid", "loginname", "password", "email")
         )
-
-
-@backend.ui.register_slot(
-    request=AdminRequest, view=UserFormIndex, name="below-content")
-def UserFilesList(request, name, view):
-    files = [models.FileBrain.create(file, request)
-             for file in request.database(
-                     models.File).find(uid=view.context.uid)]
-    return TEMPLATES["listing.pt"].render(
-        brains=files, listing_title="Files")

@@ -1,12 +1,22 @@
 <div id="searchable" metal:define-macro="listing" tal:condition="brains">
   <h2 tal:content="listing_title" />
-  <table class="table">
+  <table class="table"
+         data-locale='de-DE'
+         data-search="true"
+         data-toggle="table"
+         data-sort-name="date"
+         data-sort-order="desc"
+         >
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Status</th>
-        <th>Actions</th>
+        <th data-field="id" data-sortable="true">ID</th>
+        <th data-field="title" data-sortable="true">Title</th>
+        <th data-field="date"
+            data-sortable="true"
+            data-formatter="dateFormat"
+            data-searchable="false">Date</th>
+        <th data-field="state" data-searchable="false">Status</th>
+        <th data-field="actions" data-searchable="false">Actions</th>
       </tr>
     </thead>
     <tbody id="search-results">
@@ -17,15 +27,17 @@
              tal:attributes="href brain.link"
              tal:content="brain.title" />
         </td>
+        <td tal:content="brain.date" />
         <td>
           <span data-state="${brain.state.name}">
             ${brain.state.value}
           </span>
         </td>
         <td>
-          <ul>
-            <li tal:repeat="(title, link) brain.actions.items()">
-              <a tal:content="title" tal:attributes="href link" />
+          <ul class="list-inline">
+            <li tal:repeat="action brain.actions" class="list-inline-item">
+              <a href="${action.url}"
+                 ><i class="${action.css}"> </i>${action.title}</a>
             </li>
           </ul>
         </td>

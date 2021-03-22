@@ -1,12 +1,13 @@
 <main>
   <h1>reha.client</h1>
-  <p class="row">
-    <input type="text" class="form-control" name="search" placeholder="Namen..." hx-post="" hx-trigger="keyup changed delay:500ms" hx-target="#searchable" hx-indicator=".htmx-indicator" />
-  </p>
-  <div metal:use-macro="view.listing.macros.listing" />
-  <div class="col-sm-3 border-left">
-    <h6> MENU </h6>
-    <hr />
-    <a href="user.add"> + Neuen Benuzter anlegen</a>
-  </div>
+  <article class="row">
+    <section id="users-listing" class="col-sm-9">
+      <div metal:use-macro="view.listing.macros.listing" />
+    </section>
+    <section id="menu" class="col-sm-3 border-left">
+      <h6>MENU</h6>
+      <hr />
+      <a href="user.add"> + Neuen Benuzter anlegen</a>
+    </section>
+  </article>
 </main>

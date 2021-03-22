@@ -35,7 +35,7 @@
           <div class="col-md-4">
             <a href=""
                class="btn btn-link btn-block text-right"
-               tal:attributes="href file.actions['New document']"
+               tal:attributes="href file.actions[1].url"
                >+ Neues Dokument</a>
           </div>
           <div class="col-md-12">
