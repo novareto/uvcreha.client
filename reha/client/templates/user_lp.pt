@@ -20,7 +20,7 @@
           class="card-header"
           id="heading-${file.id}">
         <div class="row">
-          <div class="mb-0 col-md-8" >
+          <div class="mb-0 col-md-4" >
             <button
                 aria-controls="collapse-${file.id}"
                 aria-expanded="false"
@@ -33,18 +33,17 @@
             </button>
           </div>
           <div class="col-md-4">
+
+              <span tal:repeat="(title,nb) counters[file.id].items()">
+                <strong tal:content="title" />:
+                <span class="badge badge-primary badge-pill" tal:content="nb" />
+              </span>
+          </div>
+          <div class="col-md-4">
             <a href=""
                class="btn btn-link btn-block text-right"
                tal:attributes="href file.actions[1].url"
                >+ Neues Dokument</a>
-          </div>
-          <div class="col-md-12">
-            <ul>
-              <li tal:repeat="(title,nb) counters[file.id].items()">
-                <strong tal:content="title" />:
-                <span tal:content="nb" />
-              </li>
-            </ul>
           </div>
         </div>
       </div>
