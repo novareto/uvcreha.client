@@ -57,7 +57,7 @@ class Backend(Browser):
         self.register_middleware(auth, order=2)
 
 
-backend = Backend('Backend Application')
+backend = Backend(name='Backend Application')
 
 
 @backend.route("/")
