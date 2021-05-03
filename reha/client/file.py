@@ -21,7 +21,7 @@ class AddFile(AddForm):
 
     def get_fields(self):
         return self.fields(
-            only=("az", "uid", "mnr", "vid")
+            include=("az", "uid", "mnr", "vid")
         )
 
 
@@ -32,7 +32,7 @@ class FileIndex(DefaultView):
 
     def get_fields(self):
         return self.fields(
-            only=("uid", "az", "mnr", "vid")
+            include=("uid", "az", "mnr", "vid")
         )
 
 
@@ -44,7 +44,7 @@ class FileEdit(EditForm):
 
     def get_fields(self):
         return self.fields(
-            only=("uid", "az", "mnr", "vid")
+            include=("uid", "az", "mnr", "vid")
         )
 
 
