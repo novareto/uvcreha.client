@@ -1,5 +1,5 @@
 from typing import NamedTuple
-from horseman.prototyping import Environ
+from horseman.types import Environ
 from horseman.response import redirect
 
 
