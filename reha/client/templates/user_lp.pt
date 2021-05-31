@@ -18,14 +18,14 @@
     <div class="card" tal:repeat="file files">
       <div
           class="card-header"
-          id="heading-${file.id}">
+          id="heading-${hash(file.id)}">
         <div class="row">
           <div class="mb-0 col-md-4" >
             <button
-                aria-controls="collapse-${file.id}"
+                aria-controls="collapse-${hash(file.id)}"
                 aria-expanded="false"
                 class="btn btn-link btn-block text-left"
-                data-target="#collapse-${file.id}"
+                data-target="#collapse-${hash(file.id)}"
                 data-toggle="collapse"
                 type="button">
               <span tal:content="file.id" />
@@ -33,25 +33,25 @@
             </button>
           </div>
           <div class="col-md-4">
-
-              <span tal:repeat="(title,nb) counters[file.id].items()">
+              <span tal:repeat="(title, nb) counters[file.id].items()">
                 <strong tal:content="title" />:
-                <span class="badge badge-primary badge-pill" tal:content="nb" />
+                <span class="badge badge-primary badge-pill">${nb}</span>
               </span>
           </div>
           <div class="col-md-4">
             <a href=""
                class="btn btn-link btn-block text-right"
-               tal:attributes="href file.actions[1].url"
+               tal:define="(action, url) file.get_action(request, 'doc')"
+               tal:attributes="href url"
                >+ Neues Dokument</a>
           </div>
         </div>
       </div>
       <div
           class="collapse"
-          aria-labelledby="heading-${file.id}"
+          aria-labelledby="heading-${hash(file.id)}"
           data-parent="#user-content"
-          id="collapse-${file.id}">
+          id="collapse-${hash(file.id)}">
         <div class="card-body"
              tal:define="brains docs.get(file.id);
                          listing_title string:Files">

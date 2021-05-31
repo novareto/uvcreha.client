@@ -20,11 +20,13 @@
       </tr>
     </thead>
     <tbody id="search-results">
-      <tr tal:repeat="brain brains">
+      <tal:item tal:repeat="brain brains">
+      <tr tal:define="actions brain.get_actions(request)">
         <td tal:content="brain.id" />
-        <td>
+        <td tal:define="(action, url) next(actions)">
           <a href=""
-             tal:attributes="href brain.link"
+             tal:omit-tag="actions is None"
+             tal:attributes="href url"
              tal:content="brain.title" />
         </td>
         <td tal:content="brain.date" />
@@ -35,13 +37,14 @@
         </td>
         <td>
           <ul class="list-inline">
-            <li tal:repeat="action brain.actions" class="list-inline-item">
-              <a href="${action.url}"
+            <li tal:repeat="(action, url) actions" class="list-inline-item">
+              <a href="${url}"
                  ><i class="${action.css}"> </i>${action.title}</a>
             </li>
           </ul>
         </td>
       </tr>
+      </tal:item>
     </tbody>
   </table>
 </div>

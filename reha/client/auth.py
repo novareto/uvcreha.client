@@ -4,7 +4,7 @@ from horseman.response import redirect
 
 
 class BackendUser(NamedTuple):
-    loginname: str
+    title: str
 
 
 class Auth:
@@ -16,7 +16,7 @@ class Auth:
 
     def from_credentials(self, credentials: dict):
         if credentials == {'loginname': 'admin', 'password': 'admin'}:
-            return BackendUser(loginname='admin')
+            return BackendUser(title='admin')
 
     def identify(self, environ: Environ):
         if (user := environ.get(self.config.user)) is not None:
@@ -24,13 +24,13 @@ class Auth:
         session = environ[self.config.session]
         if (user_key := session.get(self.config.user, None)) is not None:
             user = environ[self.config.user] = BackendUser(
-                loginname=user_key)
+                title=user_key)
             return user
         return None
 
     def remember(self, environ: Environ, user):
         session = environ[self.config.session]
-        session[self.config.user] = user.loginname
+        session[self.config.user] = user.title
         environ[self.config.user] = user
         session.save()
 

@@ -1,16 +1,18 @@
 import pathlib
 from typing import NamedTuple, Callable, Dict
-from fanstatic import Library, Resource
-from reiter.arango.connector import Connector
-from reiter.view.meta import View
-from reiter.application.browser import TemplateLoader
-from uvcreha import models
-from uvcreha.app import Browser, fanstatic_middleware, session_middleware
-from uvcreha.browser.login import LoginForm
-from reha.client.auth import Auth
-from uvcreha.emailer import SecureMailer
 from chameleon import PageTemplate
+from fanstatic import Library, Resource
+from reiter.application.browser import TemplateLoader
+from reiter.view.meta import View
+from uvcreha import models
+from uvcreha.app import Browser
+from uvcreha.plugins import fanstatic_middleware, session_middleware
+from uvcreha.browser.login import LoginForm
+from uvcreha import contenttypes
+from uvcreha.database import Connector
+from uvcreha.emailer import SecureMailer
 from uvcreha.request import Request
+from reha.client.auth import Auth
 
 
 TEMPLATES = TemplateLoader("./templates")
@@ -34,7 +36,7 @@ class Backend(Browser):
 
     def configure(self, config):
         self.config.update(config.app)
-        self.connector = Connector(**config.arango)
+        self.connector = Connector.from_config(**config.arango)
         self.request_factory = AdminRequest
 
         # utilities
@@ -70,11 +72,11 @@ class Index(View):
         self.base = self.request.environ['SCRIPT_NAME']
 
     def get_users(self, query: str=''):
-        return [
-            models.UserBrain.create(user, self.request)
-            for user in self.request.database(models.User).find()
-            if (not query or (query and user.loginname.startswith(query)))
-        ]
+        binding = contenttypes.registry['user'].bind(self.request.database)
+        users = binding.find()
+        if not query:
+            return users
+        return [user for user in users if user.title.startswith(query)]
 
     def GET(self):
         users = self.get_users()

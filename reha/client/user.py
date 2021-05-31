@@ -1,25 +1,36 @@
 from collections import defaultdict, Counter
-from uvcreha import models
 from reiter.view.meta import View
-from uvcreha.workflow import user_workflow
+from uvcreha.browser.form import Form
 from uvcreha.browser.crud import AddForm, DefaultView, EditForm
+from uvcreha import contenttypes
+from uvcreha.workflow import user_workflow
 from reha.client.app import backend, AdminRequest, TEMPLATES
 
 
 @backend.route("/user.add", name="user.add")
 class AddUserForm(AddForm):
     title = "Benutzer anlegen"
-    model = models.User
 
-    def hook(self, obj):
-        user = self.request.database(models.User)
-        user.update(obj.uid, state=user_workflow.states.pending.name)
+    def update(self):
+        self.content_type = contenttypes.registry['user']
+
+    def create(self, data):
+        binding = self.content_type.bind(self.request.database)
+        data = data.form.dict()
+        obj, response = binding.create(**{
+            **self.params,
+            **data,
+            '_key': data['uid'],
+            'state': user_workflow.states.pending.name
+        })
         self.request.app.notify(
             "user_created",
-            request=self.request, uid=obj.uid, user=obj)
+            request=self.request, uid=obj['uid'], user=obj)
+        return obj
 
-    def get_fields(self):
-        return self.fields(
+    def get_form(self):
+        return Form.from_schema(
+            self.content_type.schema,
             include=("uid", "loginname", "password", "email")
         )
 
@@ -31,21 +42,19 @@ class UserIndex(View):
 
     def update(self):
         self.uid = self.params['uid']
-        self.context = models.UserBrain.create(
-            self.request.database(models.User).fetch(self.uid), self.request)
+        self.content_type = contenttypes.registry['user']
+        self.context = self.content_type.bind(
+            self.request.database).fetch(self.uid)
 
     def GET(self):
-        files = [
-            models.FileBrain.create(file, self.request)
-            for file in
-            self.request.database(models.File).find(uid=self.uid)
-        ]
+        ct = contenttypes.registry['file']
+        files = ct.bind(self.request.database).find(uid=self.uid)
         docs = defaultdict(list)
         counters = defaultdict(Counter)
-        for doc in self.request.database(models.Document).find(uid=self.uid):
-            brain = models.DocBrain.create(doc, self.request)
-            docs[doc.az].append(brain)
-            counters[doc.az].update([brain.state.value])
+        ct = contenttypes.registry['document']
+        for doc in ct.bind(self.request.database).find(uid=self.uid):
+            docs[doc['az']].append(doc)
+            counters[doc['az']].update([doc.state.value])
         return {
             'files': files,
             'docs': docs,
@@ -56,10 +65,28 @@ class UserIndex(View):
 @backend.route("/users/{uid}/edit", name="user.edit")
 class EditUserForm(EditForm):
     title = "Benutzer anlegen"
-    model = models.User
     readonly = ('uid',)
 
-    def get_fields(self):
-        return self.fields(
-            only=("uid", "loginname", "password", "email")
+    def update(self):
+        self.uid = self.params['uid']
+        self.content_type = contenttypes.registry['user']
+        self.context = self.content_type.bind(
+            self.request.database).fetch(self.uid)
+
+    def get_initial_data(self):
+        return self.context
+
+    def apply(self, data):
+        formdata = data.form.dict()
+        return self.content_type.bind(
+            self.request.database).update(formdata['uid'], **formdata)
+
+    def remove(self, id):
+        return self.content_type.bind(self.request.database).delete(id)
+
+    def get_form(self):
+        return Form.from_schema(
+            self.content_type.schema, include=(
+                "uid", "loginname", "password", "email"
+            )
         )
