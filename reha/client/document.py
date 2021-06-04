@@ -14,7 +14,7 @@ def alternatives(name, form):
         'Select your content type', choices=alts).bind(form, name)
 
 
-@backend.route("/users/{uid}/files/{az}/add_document", name="file.new_doc")
+@backend.register("/users/{uid}/files/{az}/add_document", name="file.new_doc")
 class AddDocument(AddForm):
     title = "Dokument anlegen"
     readonly = ('az', 'uid')
@@ -46,7 +46,7 @@ class AddDocument(AddForm):
         return form
 
 
-@backend.route("/users/{uid}/file/{az}/docs/{docid}", name="doc.view")
+@backend.register("/users/{uid}/file/{az}/docs/{docid}", name="doc.view")
 class DocumentIndex(DefaultView):
     title = "Document"
 
@@ -67,7 +67,7 @@ class DocumentIndex(DefaultView):
         )
 
 
-@backend.route("/users/{uid}/file/{az}/docs/{docid}/edit", name="doc.edit")
+@backend.register("/users/{uid}/file/{az}/docs/{docid}/edit", name="doc.edit")
 class DocumentEdit(EditForm):
     title = "Document"
     readonly = ('uid', 'az', 'docid', 'content_type')

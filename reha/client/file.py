@@ -1,12 +1,12 @@
 from typing import NamedTuple, Callable
-from reha.client.app import backend, AdminRequest, TEMPLATES
+from reha.client.app import backend, ui, AdminRequest, TEMPLATES
 from uvcreha.browser.crud import EditForm, AddForm, DefaultView
 from uvcreha.browser.form import Form
 from uvcreha import contenttypes
 from uvcreha.workflow import file_workflow
 
 
-@backend.route("/users/{uid}/add_file", name="user.new_file")
+@backend.register("/users/{uid}/add_file", name="user.new_file")
 class AddFile(AddForm):
     title = "Benutzer anlegen"
     readonly = ('uid',)
@@ -32,7 +32,7 @@ class AddFile(AddForm):
         )
 
 
-@backend.route("/users/{uid}/file/{az}", name="file.view")
+@backend.register("/users/{uid}/file/{az}", name="file.view")
 class FileIndex(DefaultView):
     title = "File"
 
@@ -49,7 +49,7 @@ class FileIndex(DefaultView):
         )
 
 
-@backend.route("/users/{uid}/file/{az}/edit", name="file.edit")
+@backend.register("/users/{uid}/file/{az}/edit", name="file.edit")
 class FileEdit(EditForm):
     title = "File"
     readonly = ('uid', 'az')
@@ -74,8 +74,7 @@ class FileEdit(EditForm):
             self.content_type.schema, include=("uid", "az", "mnr", "vid"))
 
 
-@backend.ui.register_slot(
-    request=AdminRequest, view=FileIndex, name="below-content")
+@ui.register_slot(request=AdminRequest, view=FileIndex, name="below-content")
 def FileDocumentsList(request, name, view):
     ct = contenttypes.registry['document']
     docs = ct.bind(request.database).find(

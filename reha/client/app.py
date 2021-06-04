@@ -1,18 +1,12 @@
-import pathlib
-from typing import NamedTuple, Callable, Dict
 from chameleon import PageTemplate
 from fanstatic import Library, Resource
 from reiter.application.browser import TemplateLoader
-from reiter.view.meta import View
-from uvcreha import models
-from uvcreha.app import Browser
-from uvcreha.plugins import fanstatic_middleware, session_middleware
-from uvcreha.browser.login import LoginForm
+from reiter.application.browser import registries
+from reiter.view.meta import View, routables
+from roughrider.routing.route import NamedRoutes
 from uvcreha import contenttypes
-from uvcreha.database import Connector
-from uvcreha.emailer import SecureMailer
+from uvcreha.browser.login import LoginForm
 from uvcreha.request import Request
-from reha.client.auth import Auth
 
 
 TEMPLATES = TemplateLoader("./templates")
@@ -20,49 +14,15 @@ library = Library("reha.client", "static")
 htmx = Resource(library, 'htmx.js', bottom=True)
 css = Resource(library, 'admin.css')
 
+backend = NamedRoutes(extractor=routables)
+ui = registries.UIRegistry()
+
 
 class AdminRequest(Request):
-
-    def __init__(self, app, environ, route):
-        super(AdminRequest, self).__init__(app, environ, route)
-        css.need()
+    pass
 
 
-class Backend(Browser):
-
-    def check_permissions(self, route, environ):
-        # backend specific security check.
-        pass
-
-    def configure(self, config):
-        self.config.update(config.app)
-        self.connector = Connector.from_config(**config.arango)
-        self.request_factory = AdminRequest
-
-        # utilities
-        db = self.connector.get_database()
-        auth = Auth(self.config.env)
-        self.utilities.register(auth, name="authentication")
-
-        if config.emailer:
-            emailer = SecureMailer(config.emailer)
-            self.utilities.register(emailer, name="emailer")
-
-        # middlewares
-        self.register_middleware(
-            fanstatic_middleware(self.config.assets), order=0)
-
-        middleware = session_middleware(self.config)
-        middleware.manager.cookie_name += ".admin"
-        self.register_middleware(middleware, order=1)
-
-        self.register_middleware(auth, order=2)
-
-
-backend = Backend(name='Backend Application')
-
-
-@backend.route("/")
+@backend.register("/")
 class Index(View):
     template = TEMPLATES['index']
     listing = TEMPLATES['listing']
@@ -92,14 +52,14 @@ class Index(View):
         )
 
 
-backend.route("/login")(LoginForm)
+backend.register("/login")(LoginForm)
 
 
-@backend.ui.register_slot(request=AdminRequest, name="sitecap")
+@ui.register_slot(request=AdminRequest, name="sitecap")
 def sitecap(request, name, view):
     return ''
 
 
-@backend.ui.register_slot(request=AdminRequest, name="footer")
+@ui.register_slot(request=AdminRequest, name="footer")
 def footer(request, name, view):
     return TEMPLATES["footer.pt"].render(request=request)

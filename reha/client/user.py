@@ -7,7 +7,7 @@ from uvcreha.workflow import user_workflow
 from reha.client.app import backend, AdminRequest, TEMPLATES
 
 
-@backend.route("/user.add", name="user.add")
+@backend.register("/user.add", name="user.add")
 class AddUserForm(AddForm):
     title = "Benutzer anlegen"
 
@@ -35,7 +35,7 @@ class AddUserForm(AddForm):
         )
 
 
-@backend.route("/users/{uid}", name="user.view")
+@backend.register("/users/{uid}", name="user.view")
 class UserIndex(View):
     template = TEMPLATES['user_lp']
     listing = TEMPLATES['listing']
@@ -62,7 +62,7 @@ class UserIndex(View):
         }
 
 
-@backend.route("/users/{uid}/edit", name="user.edit")
+@backend.register("/users/{uid}/edit", name="user.edit")
 class EditUserForm(EditForm):
     title = "Benutzer anlegen"
     readonly = ('uid',)
