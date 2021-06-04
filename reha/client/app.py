@@ -1,4 +1,3 @@
-from chameleon import PageTemplate
 from fanstatic import Library, Resource
 from reiter.application.browser import TemplateLoader
 from reiter.application.browser import registries

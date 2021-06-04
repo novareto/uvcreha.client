@@ -1,6 +1,5 @@
 from typing import NamedTuple
 from horseman.types import Environ
-from horseman.response import redirect
 from uvcreha.auth import Auth
 
 

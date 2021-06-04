@@ -1,4 +1,3 @@
-from typing import NamedTuple, Callable
 from reha.client.app import backend, ui, AdminRequest, TEMPLATES
 from uvcreha.browser.crud import EditForm, AddForm, DefaultView
 from uvcreha.browser.form import Form

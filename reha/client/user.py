@@ -1,10 +1,10 @@
 from collections import defaultdict, Counter
 from reiter.view.meta import View
 from uvcreha.browser.form import Form
-from uvcreha.browser.crud import AddForm, DefaultView, EditForm
+from uvcreha.browser.crud import AddForm, EditForm
 from uvcreha import contenttypes
 from uvcreha.workflow import user_workflow
-from reha.client.app import backend, AdminRequest, TEMPLATES
+from reha.client.app import backend, TEMPLATES
 
 
 @backend.register("/user.add", name="user.add")
