@@ -1,50 +1,29 @@
 from typing import NamedTuple
 from horseman.types import Environ
-from horseman.response import redirect
+from uvcreha.auth import Auth
 
 
 class BackendUser(NamedTuple):
     title: str
 
 
-class Auth:
-
-    unprotected = {'/login'}
-
-    def __init__(self, config):
-        self.config = config
+class AdminAuth(Auth):
 
     def from_credentials(self, credentials: dict):
         if credentials == {'loginname': 'admin', 'password': 'admin'}:
             return BackendUser(title='admin')
 
     def identify(self, environ: Environ):
-        if (user := environ.get(self.config.user)) is not None:
+        if (user := environ.get(self.user_key)) is not None:
             return user
-        session = environ[self.config.session]
-        if (user_key := session.get(self.config.user, None)) is not None:
-            user = environ[self.config.user] = BackendUser(
-                title=user_key)
+        session = environ[self.session_key]
+        if (user_key := session.get(self.user_key, None)) is not None:
+            user = environ[self.user_key] = BackendUser(title=user_key)
             return user
         return None
 
     def remember(self, environ: Environ, user):
-        session = environ[self.config.session]
-        session[self.config.user] = user.title
-        environ[self.config.user] = user
+        session = environ[self.session_key]
+        session[self.user_key] = user.title
+        environ[self.user_key] = user
         session.save()
-
-    def __call__(self, app):
-
-        def auth_application_wrapper(environ, start_response):
-            user = self.identify(environ)
-
-            if environ['PATH_INFO'] not in self.unprotected:
-                # App results need protection checks now.
-                if user is None:
-                    # Protected access and no user. Go login.
-                    return redirect(environ['SCRIPT_NAME'] + '/login')(
-                        environ, start_response)
-            return app(environ, start_response)
-
-        return auth_application_wrapper
