@@ -24,14 +24,12 @@ class AddDocument(AddForm):
 
     def create(self, data):
         binding = self.content_type.bind(self.request.database)
-        import pdb; pdb.set_trace()
         data = data.form.dict()
         obj, response = binding.create(
             _key=data['docid'], **{**self.params, **data})
         return obj
 
     def get_form(self):
-        import pdb; pdb.set_trace()
         return Form.from_schema(
             self.content_type.schema,
             include=('az', 'uid', 'docid', 'content_type')

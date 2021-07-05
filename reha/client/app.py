@@ -1,11 +1,12 @@
 from fanstatic import Library, Resource
 from reiter.application.browser import TemplateLoader
 from reiter.application.browser import registries
-from reiter.view.meta import View, routables
+from reiter.view.utils import routables
 from roughrider.routing.route import NamedRoutes
 from uvcreha import contenttypes
 from uvcreha.browser.login import LoginForm
 from uvcreha.request import Request
+from uvcreha.browser.views import View
 
 
 TEMPLATES = TemplateLoader("./templates")
