@@ -24,7 +24,7 @@ class AddDocument(AddForm):
 
     def create(self, data):
         binding = self.content_type.bind(self.request.database)
-        data = data.form.dict()
+        data = self.content_type.factory.create(data.form.dict())
         obj, response = binding.create(
             _key=data['docid'], **{**self.params, **data})
         return obj
