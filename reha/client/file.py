@@ -15,7 +15,7 @@ class AddFile(AddForm):
 
     def create(self, data):
         binding = self.content_type.bind(self.request.database)
-        data = self.content_type.factory.create(data.form.dict())
+        data = self.content_type.factory.create(data)
         obj, response = binding.create(**{
                 **self.params,
                 **data,

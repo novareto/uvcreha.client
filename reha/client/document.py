@@ -7,9 +7,14 @@ from wtforms.fields import SelectField
 
 
 def alternatives(name, form):
-    alts = [(key, schema.get('title', key))
-            for key, schema in jsonschema.store.items()
-            if schema.get("$comment") == "document item"]
+    alts = []
+    for key, versions in jsonschema.documents_store.items():
+        if versions:
+            latest = versions.get()
+            alts.append((
+                f'{key}.{latest.number}',
+                latest.value.get('title', key)
+            ))
     return SelectField(
         'Select your content type', choices=alts).bind(form, name)
 
@@ -24,7 +29,7 @@ class AddDocument(AddForm):
 
     def create(self, data):
         binding = self.content_type.bind(self.request.database)
-        data = self.content_type.factory.create(data.form.dict())
+        data = self.content_type.factory.create(data)
         obj, response = binding.create(
             _key=data['docid'], **{**self.params, **data})
         return obj

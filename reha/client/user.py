@@ -16,7 +16,7 @@ class AddUserForm(AddForm):
 
     def create(self, data):
         binding = self.content_type.bind(self.request.database)
-        data = self.content_type.factory.create(data.form.dict())
+        data = self.content_type.factory.create(data)
         obj, response = binding.create(**{
             **self.params,
             **data,
@@ -77,9 +77,8 @@ class EditUserForm(EditForm):
         return self.context
 
     def apply(self, data):
-        formdata = data.form.dict()
         return self.content_type.bind(
-            self.request.database).update(formdata['uid'], **formdata)
+            self.request.database).update(formdata['uid'], **data)
 
     def remove(self, id):
         return self.content_type.bind(self.request.database).delete(id)
